@@ -105,7 +105,7 @@ int headergen_write_field_macros(headergen_dev_t *dev, headergen_reg_t *reg, hea
 int headergen_write_option_macros(headergen_dev_t *dev, headergen_reg_t *reg, headergen_fld_t *fld, headergen_opt_t *opt, FILE *fh)
 {
     char prefix_fld[128];
-    char prefix_opt[128];
+    char prefix_opt[192];
     char comment[256];
 
     snprintf(prefix_fld, sizeof(prefix_fld), "%s%s%s%s%s",
@@ -115,7 +115,7 @@ int headergen_write_option_macros(headergen_dev_t *dev, headergen_reg_t *reg, he
                 HEADERGEN_SEPARATOR,
                 fld->name);
 
-    snprintf(prefix_opt, sizeof(prefix_fld), "%s%s%s",
+    snprintf(prefix_opt, sizeof(prefix_opt), "%s%s%s",
                 prefix_fld,
                 HEADERGEN_SEPARATOR,
                 opt->name);
