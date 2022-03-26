@@ -104,6 +104,7 @@ int headergen_write_field_macros(headergen_dev_t *dev, headergen_reg_t *reg, hea
 
 int headergen_write_option_macros(headergen_dev_t *dev, headergen_reg_t *reg, headergen_fld_t *fld, headergen_opt_t *opt, FILE *fh)
 {
+    // TODO: make these non-arbitrary values
     char prefix_fld[128];
     char prefix_opt[192];
     char comment[256];
@@ -142,7 +143,7 @@ int headergen_write_option_macros(headergen_dev_t *dev, headergen_reg_t *reg, he
             HEADERGEN_DOXYGEN_INLINE_COMMENT_START,
             opt->name,
             opt->description ? " - " : "",
-            opt->description ? fld->description : "",
+            opt->description ? opt->description : "",
             HEADERGEN_DOXYGEN_INLINE_COMMENT_END);
 
     /* Option value mask */
