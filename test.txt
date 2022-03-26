@@ -1,0 +1,74 @@
+STREAM START
+Got token of type 5
+[Block mapping]
+(Key token)   scalar name 
+(Value token) scalar IS31FL3237 
+(Key token)   scalar description 
+(Value token) scalar 36-channel LED driver 
+(Key token)   scalar registers 
+(Value token) <b>Start Block (Entry)</b>
+[Block mapping]
+(Key token)   scalar name 
+(Value token) scalar Control 
+(Key token)   scalar description 
+(Value token) scalar Power control register 
+(Key token)   scalar address 
+(Value token) scalar 0x00 
+(Key token)   scalar width 
+(Value token) scalar 8 
+(Key token)   scalar fields 
+(Value token) <b>Start Block (Entry)</b>
+[Block mapping]
+(Key token)   scalar name 
+(Value token) scalar SSD 
+(Key token)   scalar description 
+(Value token) scalar Software Shutdown Enable 
+(Key token)   scalar position 
+(Value token) scalar 0 
+(Key token)   scalar width 
+(Value token) scalar 1 
+(Key token)   scalar options 
+(Value token) <b>Start Block (Entry)</b>
+[Block mapping]
+(Key token)   scalar name 
+(Value token) scalar Shutdown 
+(Key token)   scalar description 
+(Value token) scalar Shutdown mode enabled 
+(Key token)   scalar value 
+(Value token) scalar 0 
+<b>End block</b>
+<b>Start Block (Entry)</b>
+[Block mapping]
+(Key token)   scalar name 
+(Value token) scalar Normal 
+(Key token)   scalar description 
+(Value token) scalar Normal operation 
+(Key token)   scalar value 
+(Value token) scalar 1 
+<b>End block</b>
+<b>End block</b>
+<b>Start Block (Entry)</b>
+[Block mapping]
+(Key token)   scalar name 
+(Value token) scalar PMS 
+(Key token)   scalar description 
+(Value token) scalar PWM Resolution 
+(Key token)   scalar position 
+(Value token) scalar 1 
+(Key token)   scalar width 
+(Value token) scalar 2 
+<b>End block</b>
+<b>Start Block (Entry)</b>
+[Block mapping]
+(Key token)   scalar name 
+(Value token) scalar OSC 
+(Key token)   scalar description 
+(Value token) scalar Oscillator Clock Frequency Selection 
+(Key token)   scalar position 
+(Value token) scalar 4 
+(Key token)   scalar width 
+(Value token) scalar 3 
+<b>End block</b>
+<b>End block</b>
+<b>End block</b>
+STREAM END

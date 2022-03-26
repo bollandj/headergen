@@ -1,0 +1,29 @@
+---
+devices:
+- name: IS31FL3237
+  description: 36-channel LED driver
+  registers:
+  - name: Control
+    description: Power control register
+    address: 0x00
+    width: 8
+    fields:
+    - name: SSD
+      description: Software Shutdown Enable
+      position: 0
+      width: 1
+      options:
+      - name: Shutdown
+        description: Shutdown mode enabled
+        value: 0
+      - name: Normal
+        description: Normal operation
+        value: 1
+    - name: PMS
+      description: PWM Resolution
+      position: 1
+      width: 2
+    - name: OSC
+      description: Oscillator Clock Frequency Selection
+      position: 4
+      width: 3
