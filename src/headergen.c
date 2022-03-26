@@ -3,35 +3,6 @@
 #include <ctype.h>
 #include <string.h>
 
-/*
-
-static void strtoupper(char *dst, const char *src)
-{
-    while (*src)
-    {
-        *dst++ = (char)toupper(*src++);
-    }
-    
-    *dst = '\0';
-}
-
-*/
-
-static void strntoupper(char *dst, const char *src, size_t n)
-{
-    size_t i = 0;
-
-    while (*src && i < n)
-    {
-        *dst++ = (char)toupper(*src++);
-        i++;
-    }
-    
-    *dst = '\0';
-}
-
-
-
 #define HEADERGEN_KEY(key_in, key_str, key_enum)    \
 do {                                                \
     if (strcmp((key_in), (key_str)) == 0)           \
@@ -57,7 +28,7 @@ static int headergen_populate_info(headergen_parser_t *parser, const char *data)
 {
     switch (parser->level)
     {
-    case HEADERGEN_DEVICE:
+    case HEADERGEN_LEVEL_DEVICE:
 
         switch (parser->member)
         {
@@ -75,7 +46,7 @@ static int headergen_populate_info(headergen_parser_t *parser, const char *data)
 
         break;
 
-    case HEADERGEN_REGISTER:
+    case HEADERGEN_LEVEL_REGISTER:
 
         switch (parser->member)
         {
@@ -99,7 +70,7 @@ static int headergen_populate_info(headergen_parser_t *parser, const char *data)
 
         break;
 
-    case HEADERGEN_FIELD:
+    case HEADERGEN_LEVEL_FIELD:
 
         switch (parser->member)
         {
@@ -123,12 +94,12 @@ static int headergen_populate_info(headergen_parser_t *parser, const char *data)
 
         break;
 
-    case HEADERGEN_OPTION:
+    case HEADERGEN_LEVEL_OPTION:
 
         switch (parser->member)
         {
         case HEADERGEN_MEMBER_NAME:
-            strntoupper(parser->current_opt->name, data, HEADERGEN_MAX_NAME_LENGTH);
+            strncpy(parser->current_opt->name, data, HEADERGEN_MAX_NAME_LENGTH);
             break;
 
         case HEADERGEN_MEMBER_DESCRIPTION:
@@ -153,7 +124,7 @@ static int headergen_populate_info(headergen_parser_t *parser, const char *data)
 
 void headergen_parser_init(headergen_parser_t *parser)
 {
-    parser->level = HEADERGEN_DEVICE;
+    parser->level = HEADERGEN_LEVEL_DEVICE;
     parser->member = HEADERGEN_MEMBER_NAME;
     parser->root = malloc(sizeof(headergen_node_t));
 }
@@ -177,41 +148,41 @@ int headergen_process_token(headergen_parser_t *parser, headergen_token_t token)
     case HEADERGEN_BLOCK_START:
         parser->level++;  
 
-        if (parser->level == HEADERGEN_DEVICE) 
+        if (parser->level == HEADERGEN_LEVEL_DEVICE) 
         {
             parser->current_dev = headergen_tree_add_child(parser->root);    
         }
-        else if (parser->level == HEADERGEN_REGISTER)
+        else if (parser->level == HEADERGEN_LEVEL_REGISTER)
         {
             parser->current_reg = headergen_tree_add_child(parser->current_dev);    
         }
-        else if (parser->level == HEADERGEN_FIELD)
+        else if (parser->level == HEADERGEN_LEVEL_FIELD)
         {
             parser->current_fld = headergen_tree_add_child(parser->current_reg);     
         }
-        else if (parser->level == HEADERGEN_OPTION)
+        else if (parser->level == HEADERGEN_LEVEL_OPTION)
         {
             parser->current_opt = headergen_tree_add_child(parser->current_fld);    
         }
         break;
         
     case HEADERGEN_BLOCK_END:
-        if (parser->level == HEADERGEN_DEVICE) 
+        if (parser->level == HEADERGEN_LEVEL_DEVICE) 
         {
             //printf("device: name: %s description: %s\n", info.dev.name, info.dev.description);
             
         }
-        else if (parser->level == HEADERGEN_REGISTER)
+        else if (parser->level == HEADERGEN_LEVEL_REGISTER)
         {
             //printf("register: name: %s description: %s\n", info.reg.name, info.reg.description);
             
         }
-        else if (parser->level == HEADERGEN_FIELD)
+        else if (parser->level == HEADERGEN_LEVEL_FIELD)
         {
             //printf("field: name: %s description: %s\n", info.fld.name, info.fld.description);
             
         }
-        else if (parser->level == HEADERGEN_OPTION)
+        else if (parser->level == HEADERGEN_LEVEL_OPTION)
         {
             //printf("option: name: %s description: %s\n", info.opt.name, info.opt.description);
             

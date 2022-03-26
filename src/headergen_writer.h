@@ -6,8 +6,8 @@
 #include "headergen_types.h"
 
 #define HEADERGEN_POSITION_SUFFIX "Pos"
-#define HEADERGEN_VALUE_SUFFIX "Val"
 #define HEADERGEN_MASK_SUFFIX "Msk"
+#define HEADERGEN_VALUE_SUFFIX "Val"
 #define HEADERGEN_SEPARATOR "_"
 
 #define HEADERGEN_DOXYGEN_BLOCK_COMMENT_START "/**"

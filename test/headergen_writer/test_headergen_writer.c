@@ -12,7 +12,7 @@ int main(void)
     };
 
     headergen_reg_t reg = {
-        .name = "CONTROL",
+        .name = "Control",
         .description = "Power control register",
         .address = 0x00,
         .width = 8
@@ -26,21 +26,28 @@ int main(void)
     };
 
     headergen_opt_t opt = {
-        .name = "SHUTDOWN",
+        .name = "Shutdown",
         .description = "Shutdown mode enabled",
         .value = 0
     };
 
-    FILE *fh = fopen("../../test_output.c", "w");
+    FILE *fh = fopen("test_output.c", "w");
 
     if (fh == NULL)
         fputs("Failed to open file!\n", stderr);
+    else
+        fputs("Opened file\n", stdout);
 
     headergen_write_device_macros(&dev, fh);
+    fprintf(fh, "\n");
     headergen_write_register_macros(&dev, &reg, fh);
+    fprintf(fh, "\n");
     headergen_write_field_macros(&dev, &reg, &fld, fh);
+    fprintf(fh, "\n");
     headergen_write_option_macros(&dev, &reg, &fld, &opt, fh);
+    fprintf(fh, "\n");
 
     fclose(fh);
+    fputs("Closed file\n", stdout);
     return 0;
 }
