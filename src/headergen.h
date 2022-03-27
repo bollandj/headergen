@@ -33,10 +33,10 @@ typedef struct {
 
     headergen_node_t *root;
 
-    headergen_dev_t *current_dev;
-    headergen_reg_t *current_reg;
-    headergen_fld_t *current_fld;
-    headergen_opt_t *current_opt;
+    headergen_node_t *current_dev_node;
+    headergen_node_t *current_reg_node;
+    headergen_node_t *current_fld_node;
+    headergen_node_t *current_opt_node;
 } headergen_parser_t;
 
 void headergen_parser_init(headergen_parser_t *parser);
