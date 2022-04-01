@@ -1,5 +1,7 @@
 #include "headergen.h"
 
+#include "headergen_writer.h"
+
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
@@ -29,19 +31,19 @@ static int headergen_populate_info(headergen_parser_t *parser, const char *data)
 {
     switch (parser->level)
     {
-    case HEADERGEN_LEVEL_DEVICE:
+        case HEADERGEN_LEVEL_DEVICE:
 
         switch (parser->member)
         {
-        case HEADERGEN_MEMBER_NAME:
+            case HEADERGEN_MEMBER_NAME:
             strncpy(parser->current_dev_node->dev.name, data, HEADERGEN_MAX_NAME_LENGTH);
             break;
 
-        case HEADERGEN_MEMBER_DESCRIPTION:
+            case HEADERGEN_MEMBER_DESCRIPTION:
             strncpy(parser->current_dev_node->dev.description, data, HEADERGEN_MAX_DESCRIPTION_LENGTH);
             break;
 
-        default:
+            default:
             break;
         }
 
@@ -51,21 +53,21 @@ static int headergen_populate_info(headergen_parser_t *parser, const char *data)
 
         switch (parser->member)
         {
-        case HEADERGEN_MEMBER_NAME:
+            case HEADERGEN_MEMBER_NAME:
             strncpy(parser->current_reg_node->reg.name, data, HEADERGEN_MAX_NAME_LENGTH);
             break;
 
-        case HEADERGEN_MEMBER_DESCRIPTION:
+            case HEADERGEN_MEMBER_DESCRIPTION:
             strncpy(parser->current_reg_node->reg.description, data, HEADERGEN_MAX_DESCRIPTION_LENGTH);
             break;
 
-        case HEADERGEN_MEMBER_ADDRESS:
+            case HEADERGEN_MEMBER_ADDRESS:
             break;
 
-        case HEADERGEN_MEMBER_WIDTH:
+            case HEADERGEN_MEMBER_WIDTH:
             break;
 
-        default:
+            default:
             break;
         }
 
@@ -153,42 +155,46 @@ int headergen_process_token(headergen_parser_t *parser, headergen_token_t token)
 
         if (parser->level == HEADERGEN_LEVEL_DEVICE) 
         {
-            current_node = parser->current_dev_node = headergen_tree_add_child(current_node);  
+            printf("Adding device node\n");
+            parser->current_dev_node = headergen_tree_add_child(current_node); 
+            current_node = parser->current_dev_node ;
         }
         else if (parser->level == HEADERGEN_LEVEL_REGISTER)
         {
-            current_node = parser->current_reg_node = headergen_tree_add_child(current_node); 
+            printf("Adding register node\n");
+            parser->current_reg_node = headergen_tree_add_child(current_node); 
+            current_node = parser->current_reg_node;
         }
         else if (parser->level == HEADERGEN_LEVEL_FIELD)
         {
-            current_node = parser->current_fld_node = headergen_tree_add_child(current_node);   
+            printf("Adding field node\n");
+            parser->current_fld_node = headergen_tree_add_child(current_node);   
+            current_node = parser->current_fld_node;
         }
         else if (parser->level == HEADERGEN_LEVEL_OPTION)
         {
-            current_node = parser->current_opt_node = headergen_tree_add_child(current_node);   
+            printf("Adding option node\n");
+            parser->current_opt_node = headergen_tree_add_child(current_node);   
+            current_node = parser->current_opt_node;
         }
         break;
         
     case HEADERGEN_BLOCK_END:
         if (parser->level == HEADERGEN_LEVEL_DEVICE) 
         {
-            //printf("device: name: %s description: %s\n", info.dev.name, info.dev.description);
-            
+            //printf("device: name: %s description: %s\n", info.dev.name, info.dev.description);      
         }
         else if (parser->level == HEADERGEN_LEVEL_REGISTER)
         {
-            //printf("register: name: %s description: %s\n", info.reg.name, info.reg.description);
-            
+            //printf("register: name: %s description: %s\n", info.reg.name, info.reg.description);        
         }
         else if (parser->level == HEADERGEN_LEVEL_FIELD)
         {
-            //printf("field: name: %s description: %s\n", info.fld.name, info.fld.description);
-            
+            //printf("field: name: %s description: %s\n", info.fld.name, info.fld.description);        
         }
         else if (parser->level == HEADERGEN_LEVEL_OPTION)
         {
-            //printf("option: name: %s description: %s\n", info.opt.name, info.opt.description);
-            
+            //printf("option: name: %s description: %s\n", info.opt.name, info.opt.description);          
         }
         parser->level--;
         
@@ -207,8 +213,64 @@ int headergen_process_token(headergen_parser_t *parser, headergen_token_t token)
         
     }
 
-    // printf("headergen: Current level: %d Current member: %d \n", level, member);
-
+    printf("headergen: Current level: %d\n", parser->level);
+ 
     return 0;
+}
+
+static void headergen_write_traverse(FILE *fh, headergen_parser_t *parser, headergen_node_t *node, int level)
+{
+    headergen_node_t *current_sibling = node;
+    int breadth = 0;
+
+    while (current_sibling != NULL)
+    {
+        switch (level)
+        {
+            case HEADERGEN_LEVEL_DEVICE:
+            parser->current_dev_node = current_sibling;
+            headergen_write_device_macros(fh, &parser->current_dev_node->dev);
+            break;
+
+            case HEADERGEN_LEVEL_REGISTER:
+            parser->current_reg_node = current_sibling;
+            headergen_write_register_macros(fh, &parser->current_dev_node->dev,
+                                                &parser->current_reg_node->reg);
+            break;
+
+            case HEADERGEN_LEVEL_FIELD:
+            parser->current_fld_node = current_sibling;
+            headergen_write_field_macros(fh, &parser->current_dev_node->dev,
+                                                &parser->current_reg_node->reg,
+                                                &parser->current_fld_node->fld);
+            break;
+
+            case HEADERGEN_LEVEL_OPTION:
+            parser->current_opt_node = current_sibling;
+            headergen_write_option_macros(fh, &parser->current_dev_node->dev,
+                                                &parser->current_reg_node->reg,
+                                                &parser->current_fld_node->fld,
+                                                &parser->current_opt_node->opt);
+            break;
+
+            default:
+            break;
+        }
+
+        if (current_sibling->child != NULL)
+        {
+            headergen_write_traverse(fh, parser, current_sibling->child, level + 1);     
+        }
+
+        current_sibling = current_sibling->sibling;
+        breadth++;      
+    }  
+}
+
+void headergen_write(FILE *fh, headergen_parser_t *parser)
+{
+    int level = HEADERGEN_LEVEL_ROOT;
+    printf("Traversing tree:\n");
+    headergen_write_traverse(fh, parser, parser->root, level);
 }
 

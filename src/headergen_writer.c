@@ -29,20 +29,24 @@ static void strntoupper(char *dst, const char *src, size_t n)
     *dst = '\0';
 }
 
-int headergen_write_device_macros(headergen_dev_t *dev, FILE *fh)
+int headergen_write_device_macros(FILE *fh, headergen_dev_t *dev)
 {
+    printf("Writing device macros\n");
     return 0;
 }
 
-int headergen_write_register_macros(headergen_dev_t *dev, headergen_reg_t *reg, FILE *fh)
+int headergen_write_register_macros(FILE *fh, headergen_dev_t *dev, headergen_reg_t *reg)
 {
+    printf("Writing register macros\n");
     return 0;
 }
 
-int headergen_write_field_macros(headergen_dev_t *dev, headergen_reg_t *reg, headergen_fld_t *fld, FILE *fh)
+int headergen_write_field_macros(FILE *fh, headergen_dev_t *dev, headergen_reg_t *reg, headergen_fld_t *fld)
 {
     char prefix[128];
     char comment[256];
+
+    printf("Writing field macros\n");
 
     snprintf(prefix, sizeof(prefix), "%s%s%s%s%s",
                 dev->name,
@@ -102,12 +106,14 @@ int headergen_write_field_macros(headergen_dev_t *dev, headergen_reg_t *reg, hea
     return 0;
 }
 
-int headergen_write_option_macros(headergen_dev_t *dev, headergen_reg_t *reg, headergen_fld_t *fld, headergen_opt_t *opt, FILE *fh)
+int headergen_write_option_macros(FILE *fh, headergen_dev_t *dev, headergen_reg_t *reg, headergen_fld_t *fld, headergen_opt_t *opt)
 {
     // TODO: make these non-arbitrary values
     char prefix_fld[128];
     char prefix_opt[192];
     char comment[256];
+
+    printf("Writing option macros\n");
 
     snprintf(prefix_fld, sizeof(prefix_fld), "%s%s%s%s%s",
                 dev->name,

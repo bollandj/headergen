@@ -8,12 +8,11 @@
 
 enum headergen_level
 {
-    HEADERGEN_LEVEL_UNDERRUN=0,
+    HEADERGEN_LEVEL_ROOT=0,
     HEADERGEN_LEVEL_DEVICE,
     HEADERGEN_LEVEL_REGISTER,
     HEADERGEN_LEVEL_FIELD,
-    HEADERGEN_LEVEL_OPTION,
-    HEADERGEN_LEVEL_OVERRUN
+    HEADERGEN_LEVEL_OPTION
 };
 
 enum headergen_member
@@ -43,4 +42,6 @@ void headergen_parser_init(headergen_parser_t *parser);
 void headergen_parser_delete(headergen_parser_t *parser);
 
 int headergen_process_token(headergen_parser_t *parser, headergen_token_t token);
+
+void headergen_write(FILE *fh, headergen_parser_t *parser);
 
