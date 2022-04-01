@@ -25,10 +25,16 @@ int main(void)
         .width = 1
     };
 
-    headergen_opt_t opt = {
+    headergen_opt_t opt0 = {
         .name = "Shutdown",
         .description = "Shutdown mode enabled",
         .value = 0
+    };
+
+    headergen_opt_t opt1 = {
+        .name = "Normal",
+        .description = "Normal operation",
+        .value = 1
     };
 
     FILE *fh = fopen("test_output.c", "w");
@@ -44,7 +50,8 @@ int main(void)
     fprintf(fh, "\n");
     headergen_write_field_macros(&dev, &reg, &fld, fh);
     fprintf(fh, "\n");
-    headergen_write_option_macros(&dev, &reg, &fld, &opt, fh);
+    headergen_write_option_macros(&dev, &reg, &fld, &opt0, fh);
+    headergen_write_option_macros(&dev, &reg, &fld, &opt1, fh);
     fprintf(fh, "\n");
 
     fclose(fh);
