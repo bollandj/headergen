@@ -2,6 +2,7 @@
 
 #include <ctype.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define HEADERGEN_KEY(key_in, key_str, key_enum)    \
 do {                                                \
@@ -33,11 +34,11 @@ static int headergen_populate_info(headergen_parser_t *parser, const char *data)
         switch (parser->member)
         {
         case HEADERGEN_MEMBER_NAME:
-            strntoupper(parser->current_dev->name, data, HEADERGEN_MAX_NAME_LENGTH);
+            strncpy(parser->current_dev_node->dev.name, data, HEADERGEN_MAX_NAME_LENGTH);
             break;
 
         case HEADERGEN_MEMBER_DESCRIPTION:
-            strncpy(parser->current_dev->description, HEADERGEN_MAX_DESCRIPTION_LENGTH);
+            strncpy(parser->current_dev_node->dev.description, data, HEADERGEN_MAX_DESCRIPTION_LENGTH);
             break;
 
         default:
@@ -51,11 +52,11 @@ static int headergen_populate_info(headergen_parser_t *parser, const char *data)
         switch (parser->member)
         {
         case HEADERGEN_MEMBER_NAME:
-            strntoupper(parser->current_reg->name, data, HEADERGEN_MAX_NAME_LENGTH);
+            strncpy(parser->current_reg_node->reg.name, data, HEADERGEN_MAX_NAME_LENGTH);
             break;
 
         case HEADERGEN_MEMBER_DESCRIPTION:
-            strncpy(parser->current_reg->description, data, HEADERGEN_MAX_DESCRIPTION_LENGTH);
+            strncpy(parser->current_reg_node->reg.description, data, HEADERGEN_MAX_DESCRIPTION_LENGTH);
             break;
 
         case HEADERGEN_MEMBER_ADDRESS:
@@ -75,11 +76,11 @@ static int headergen_populate_info(headergen_parser_t *parser, const char *data)
         switch (parser->member)
         {
         case HEADERGEN_MEMBER_NAME:
-            strntoupper(parser->current_fld->name, data, HEADERGEN_MAX_NAME_LENGTH);
+            strncpy(parser->current_fld_node->fld.name, data, HEADERGEN_MAX_NAME_LENGTH);
             break;
 
         case HEADERGEN_MEMBER_DESCRIPTION:
-            strncpy(parser->current_fld->description, data, HEADERGEN_MAX_DESCRIPTION_LENGTH);
+            strncpy(parser->current_fld_node->fld.description, data, HEADERGEN_MAX_DESCRIPTION_LENGTH);
             break;
 
         case HEADERGEN_MEMBER_POSITION:
@@ -99,11 +100,11 @@ static int headergen_populate_info(headergen_parser_t *parser, const char *data)
         switch (parser->member)
         {
         case HEADERGEN_MEMBER_NAME:
-            strncpy(parser->current_opt->name, data, HEADERGEN_MAX_NAME_LENGTH);
+            strncpy(parser->current_opt_node->opt.name, data, HEADERGEN_MAX_NAME_LENGTH);
             break;
 
         case HEADERGEN_MEMBER_DESCRIPTION:
-            strncpy(parser->current_opt->description, data, HEADERGEN_MAX_DESCRIPTION_LENGTH);
+            strncpy(parser->current_opt_node->opt.description, data, HEADERGEN_MAX_DESCRIPTION_LENGTH);
             break;
 
         case HEADERGEN_MEMBER_VALUE:
@@ -137,6 +138,8 @@ void headergen_parser_delete(headergen_parser_t *parser)
 /** Consume a token from the language parser */
 int headergen_process_token(headergen_parser_t *parser, headergen_token_t token)
 {
+    headergen_node_t *current_node = parser->root;
+
     switch ((int)token.type)
     {        
     case HEADERGEN_DOCUMENT_START:
@@ -150,19 +153,19 @@ int headergen_process_token(headergen_parser_t *parser, headergen_token_t token)
 
         if (parser->level == HEADERGEN_LEVEL_DEVICE) 
         {
-            parser->current_dev = headergen_tree_add_child(parser->root);    
+            current_node = parser->current_dev_node = headergen_tree_add_child(current_node);  
         }
         else if (parser->level == HEADERGEN_LEVEL_REGISTER)
         {
-            parser->current_reg = headergen_tree_add_child(parser->current_dev);    
+            current_node = parser->current_reg_node = headergen_tree_add_child(current_node); 
         }
         else if (parser->level == HEADERGEN_LEVEL_FIELD)
         {
-            parser->current_fld = headergen_tree_add_child(parser->current_reg);     
+            current_node = parser->current_fld_node = headergen_tree_add_child(current_node);   
         }
         else if (parser->level == HEADERGEN_LEVEL_OPTION)
         {
-            parser->current_opt = headergen_tree_add_child(parser->current_fld);    
+            current_node = parser->current_opt_node = headergen_tree_add_child(current_node);   
         }
         break;
         
