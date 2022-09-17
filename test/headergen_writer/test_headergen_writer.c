@@ -44,14 +44,14 @@ int main(void)
     else
         fputs("Opened file\n", stdout);
 
-    headergen_write_device_macros(&dev, fh);
+    headergen_write_device_macros(fh, &dev);
     fprintf(fh, "\n");
-    headergen_write_register_macros(&dev, &reg, fh);
+    headergen_write_register_macros(fh, &dev, &reg);
     fprintf(fh, "\n");
-    headergen_write_field_macros(&dev, &reg, &fld, fh);
+    headergen_write_field_macros(fh, &dev, &reg, &fld);
     fprintf(fh, "\n");
-    headergen_write_option_macros(&dev, &reg, &fld, &opt0, fh);
-    headergen_write_option_macros(&dev, &reg, &fld, &opt1, fh);
+    headergen_write_option_macros(fh, &dev, &reg, &fld, &opt0);
+    headergen_write_option_macros(fh, &dev, &reg, &fld, &opt1);
     fprintf(fh, "\n");
 
     fclose(fh);

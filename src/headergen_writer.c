@@ -57,8 +57,8 @@ int headergen_write_field_macros(FILE *fh, headergen_dev_t *dev, headergen_reg_t
 
     snprintf(comment, sizeof(comment), "%s%s%s",
                 fld->name,
-                fld->description ? " - " : "",
-                fld->description ? fld->description : "");
+                *fld->description ? " - " : "",
+                *fld->description ? fld->description : "");
 
     strntoupper(prefix, prefix, sizeof(prefix));
     strntoupper(comment, comment, sizeof(comment));
@@ -75,8 +75,8 @@ int headergen_write_field_macros(FILE *fh, headergen_dev_t *dev, headergen_reg_t
     fprintf(fh, "%s %s%s%s %s\n",
             HEADERGEN_DOXYGEN_INLINE_COMMENT_START,
             fld->name,
-            fld->description ? " - " : "",
-            fld->description ? fld->description : "",
+            *fld->description ? " - " : "",
+            *fld->description ? fld->description : "",
             HEADERGEN_DOXYGEN_INLINE_COMMENT_END);
 
     /* Field mask */
@@ -129,8 +129,8 @@ int headergen_write_option_macros(FILE *fh, headergen_dev_t *dev, headergen_reg_
 
     snprintf(comment, sizeof(comment), "%s%s%s",
                 opt->name,
-                opt->description ? " - " : "",
-                opt->description ? opt->description : "");
+                *opt->description ? " - " : "",
+                *opt->description ? opt->description : "");
 
     strntoupper(prefix_fld, prefix_fld, sizeof(prefix_fld));
     strntoupper(prefix_opt, prefix_opt, sizeof(prefix_opt));
@@ -148,8 +148,8 @@ int headergen_write_option_macros(FILE *fh, headergen_dev_t *dev, headergen_reg_
     fprintf(fh, "%s %s%s%s %s\n",
             HEADERGEN_DOXYGEN_INLINE_COMMENT_START,
             opt->name,
-            opt->description ? " - " : "",
-            opt->description ? opt->description : "",
+            *opt->description ? " - " : "",
+            *opt->description ? opt->description : "",
             HEADERGEN_DOXYGEN_INLINE_COMMENT_END);
 
     /* Option value mask */
