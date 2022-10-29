@@ -9,6 +9,6 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
 add_subdirectory(src)
-add_subdirectory(test/headergen_tree)
+add_subdirectory(test/lcrs_tree)
 add_subdirectory(test/headergen_writer)
 
