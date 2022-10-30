@@ -7,15 +7,15 @@
 
 int main(void) 
 {
-    struct lcrs_node root = {.child = NULL, .sibling = NULL, .data = 0};
+    struct lcrs_node root = {.child = NULL, .sibling = NULL, .info = NULL};
 
-    struct lcrs_node *c = lcrs_tree_add_child(&root);
-    struct lcrs_node *cs = lcrs_tree_add_sibling(c);
-    struct lcrs_node *css = lcrs_tree_add_sibling(c);
-    struct lcrs_node *cssc = lcrs_tree_add_child(css);
-    struct lcrs_node *csc = lcrs_tree_add_child(cs);
-    struct lcrs_node *cscs = lcrs_tree_add_sibling(csc);
-    struct lcrs_node *cscss = lcrs_tree_add_sibling(csc);
+    struct lcrs_node *c = lcrs_tree_add_child(&root, 1);
+    struct lcrs_node *cs = lcrs_tree_add_sibling(c, 1);
+    struct lcrs_node *css = lcrs_tree_add_sibling(c, 1);
+    struct lcrs_node *cssc = lcrs_tree_add_child(css, 1);
+    struct lcrs_node *csc = lcrs_tree_add_child(cs, 1);
+    struct lcrs_node *cscs = lcrs_tree_add_sibling(csc, 1);
+    struct lcrs_node *cscss = lcrs_tree_add_sibling(csc, 1);
 
     lcrs_tree_traverse(&root);
 
@@ -25,8 +25,8 @@ int main(void)
 
     lcrs_tree_traverse(&root);
 
-    struct lcrs_node *s = lcrs_tree_add_sibling(&root);
-    struct lcrs_node *sc = lcrs_tree_add_child(s);
+    struct lcrs_node *s = lcrs_tree_add_sibling(&root, 1);
+    struct lcrs_node *sc = lcrs_tree_add_child(s, 1);
 
     lcrs_tree_traverse(&root);
 

@@ -1,9 +1,44 @@
 #include "lcrs_tree.h"
 
-#include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 
-struct lcrs_node *lcrs_tree_add_sibling(struct lcrs_node *base)
+/* Allocate memory for a new node and its associated data and initialise struct members */
+static struct lcrs_node *lcrs_tree_create_node(size_t info_size)
+{
+    struct lcrs_node *new_node = malloc(sizeof(struct lcrs_node));
+
+    new_node->child = NULL;
+    new_node->sibling = NULL;
+    new_node->info = malloc(info_size);
+    
+    return new_node;
+}
+
+/* Deallocate memory used by a node and its associated data */
+static void lcrs_tree_delete_node(struct lcrs_node *node)
+{
+    free(node->info);
+    free(node);   
+}
+
+/* Delete all children of a node non-recursively */
+static void lcrs_tree_delete_children(struct lcrs_node *base)
+{
+    struct lcrs_node *current_sibling = base->child;
+    struct lcrs_node *next_sibling;
+
+    while (current_sibling != NULL)
+    {
+        next_sibling = current_sibling->sibling;
+        lcrs_tree_delete_node(current_sibling);
+        current_sibling = next_sibling;
+    }
+
+    base->child = NULL;
+}
+
+struct lcrs_node *lcrs_tree_add_sibling(struct lcrs_node *base, size_t info_size)
 {
     struct lcrs_node *current_sibling = base;
     struct lcrs_node *next_sibling = current_sibling->sibling;
@@ -14,44 +49,25 @@ struct lcrs_node *lcrs_tree_add_sibling(struct lcrs_node *base)
         next_sibling = current_sibling->sibling;            
     }
 
-    struct lcrs_node *new_sibling = malloc(sizeof(struct lcrs_node));
-    new_sibling->child = NULL;
-    new_sibling->sibling = NULL;
+    struct lcrs_node *new_sibling = lcrs_tree_create_node(info_size);   
     current_sibling->sibling = new_sibling;
 
     return new_sibling;
 }
 
-struct lcrs_node *lcrs_tree_add_child(struct lcrs_node *base)
+struct lcrs_node *lcrs_tree_add_child(struct lcrs_node *base, size_t info_size)
 {
     if (base->child == NULL)
     {
-        struct lcrs_node *new_child = malloc(sizeof(struct lcrs_node));
-        new_child->child = NULL;
-        new_child->sibling = NULL;
+        struct lcrs_node *new_child = lcrs_tree_create_node(info_size); 
         base->child = new_child;
         return new_child; 
     }
     else
     {
         // Node already has at least one child - add new node as a sibling to current children
-        return lcrs_tree_add_sibling(base->child);
+        return lcrs_tree_add_sibling(base->child, info_size);
     }          
-}
-
-static void lcrs_tree_delete_siblings(struct lcrs_node *base)
-{
-    struct lcrs_node *next_sibling;
-    struct lcrs_node *current_sibling;
-
-    current_sibling = base;
-
-    while (current_sibling != NULL)
-    {
-        next_sibling = current_sibling->sibling;
-        free(current_sibling);
-        current_sibling = next_sibling;
-    }
 }
 
 void lcrs_tree_delete_children_recursive(struct lcrs_node *base)
@@ -64,8 +80,7 @@ void lcrs_tree_delete_children_recursive(struct lcrs_node *base)
         current_sibling = current_sibling->sibling;           
     } 
 
-    lcrs_tree_delete_siblings(base->child);
-    base->child = NULL;
+    lcrs_tree_delete_children(base);
 }
 
 static int count = 0;

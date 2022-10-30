@@ -72,7 +72,7 @@ struct headergen_device {
     char description[HEADERGEN_MAX_DESCRIPTION_LENGTH + 1];  
 };
 
-struct headergen_node {
+struct headergen_node_info {
 
     struct headergen_device dev;
     
