@@ -1,47 +1,20 @@
 #include "headergen_writer.h"
 
-#include <ctype.h>
+#include "headergen_utils.h"
 
-#if 0
-
-static void strtoupper(char *dst, const char *src)
-{
-    while (*src)
-    {
-        *dst++ = (char)toupper(*src++);
-    }
-    
-    *dst = '\0';
-}
-
-#endif
-
-static void strntoupper(char *dst, const char *src, size_t n)
-{
-    size_t i = 0;
-
-    while (*src && i < n)
-    {
-        *dst++ = (char)toupper(*src++);
-        i++;
-    }
-    
-    *dst = '\0';
-}
-
-int headergen_write_device_macros(FILE *fh, headergen_dev_t *dev)
+int headergen_write_device_macros(FILE *fh, struct headergen_node_info *node_info)
 {
     printf("Writing device macros\n");
     return 0;
 }
 
-int headergen_write_register_macros(FILE *fh, headergen_dev_t *dev, headergen_reg_t *reg)
+int headergen_write_register_macros(FILE *fh, struct headergen_node_info *node_info)
 {
     printf("Writing register macros\n");
     return 0;
 }
 
-int headergen_write_field_macros(FILE *fh, headergen_dev_t *dev, headergen_reg_t *reg, headergen_fld_t *fld)
+int headergen_write_field_macros(FILE *fh, struct headergen_node_info *node_info)
 {
     char prefix[128];
     char comment[256];
@@ -106,7 +79,7 @@ int headergen_write_field_macros(FILE *fh, headergen_dev_t *dev, headergen_reg_t
     return 0;
 }
 
-int headergen_write_option_macros(FILE *fh, headergen_dev_t *dev, headergen_reg_t *reg, headergen_fld_t *fld, headergen_opt_t *opt)
+int headergen_write_option_macros(FILE *fh, struct headergen_node_info *node_info)
 {
     // TODO: make these non-arbitrary values
     char prefix_fld[128];

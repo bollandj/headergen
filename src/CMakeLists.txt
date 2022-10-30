@@ -1,6 +1,6 @@
 set(EXECUTABLE_NAME headergen)
 
-add_executable(${EXECUTABLE_NAME} main.c lcrs_tree.c headergen_parser.c headergen_writer.c)
+add_executable(${EXECUTABLE_NAME} main.c lcrs_tree.c headergen_parser.c headergen_utils.c headergen_writer.c)
 target_include_directories(${EXECUTABLE_NAME} PRIVATE .)
 
 find_library(LIBYAML yaml)

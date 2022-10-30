@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 /* Allocate memory for a new node and its associated data and initialise struct members */
 static struct lcrs_node *lcrs_tree_create_node(size_t info_size)
@@ -11,7 +12,7 @@ static struct lcrs_node *lcrs_tree_create_node(size_t info_size)
     new_node->child = NULL;
     new_node->sibling = NULL;
     new_node->info = malloc(info_size);
-    
+
     return new_node;
 }
 
