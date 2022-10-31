@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <yaml.h>
 
-#include "headergen.h"
+#include "headergen_parser.h"
 
 int main(void) 
 {

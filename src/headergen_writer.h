@@ -16,6 +16,10 @@
 #define HEADERGEN_DOXYGEN_INLINE_COMMENT_START "/**<"
 #define HEADERGEN_DOXYGEN_INLINE_COMMENT_END "*/"
 
+#define HEADERGEN_PERCENT_SUBSTITUTION " percent"
+#define HEADERGEN_FORWARD_SLASH_SUBSTITUTION " "
+#define HEADERGEN_BACK_SLASH_SUBSTITUTION " "
+
 int headergen_write_device_macros(FILE *fh, struct headergen_node_info *node_info);
 int headergen_write_register_macros(FILE *fh, struct headergen_node_info *node_info);
 int headergen_write_field_macros(FILE *fh, struct headergen_node_info *node_info);

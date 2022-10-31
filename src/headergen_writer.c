@@ -22,19 +22,19 @@ int headergen_write_field_macros(FILE *fh, struct headergen_node_info *node_info
     printf("Writing field macros\n");
 
     snprintf(prefix, sizeof(prefix), "%s%s%s%s%s",
-                dev->name,
+                node_info->dev.name,
                 HEADERGEN_SEPARATOR,
-                reg->name,
+                node_info->reg.name,
                 HEADERGEN_SEPARATOR,
-                fld->name);
+                node_info->fld.name);
 
     snprintf(comment, sizeof(comment), "%s%s%s",
-                fld->name,
-                *fld->description ? " - " : "",
-                *fld->description ? fld->description : "");
+                node_info->fld.name,
+                *node_info->fld.description ? " - " : "",
+                *node_info->fld.description ? node_info->fld.description : "");
 
-    strntoupper(prefix, prefix, sizeof(prefix));
-    strntoupper(comment, comment, sizeof(comment));
+    strntouppersnakecase(prefix, prefix, sizeof(prefix));
+    strntouppersnakecase(comment, comment, sizeof(comment));
 
     /* Field position */
     fprintf(fh, "#define %s%s%s %d ",
@@ -42,14 +42,14 @@ int headergen_write_field_macros(FILE *fh, struct headergen_node_info *node_info
             HEADERGEN_SEPARATOR,
             HEADERGEN_POSITION_SUFFIX,
 
-            fld->position);
+            node_info->fld.position);
 
     /* Field description */
     fprintf(fh, "%s %s%s%s %s\n",
             HEADERGEN_DOXYGEN_INLINE_COMMENT_START,
-            fld->name,
-            *fld->description ? " - " : "",
-            *fld->description ? fld->description : "",
+            node_info->fld.name,
+            *node_info->fld.description ? " - " : "",
+            *node_info->fld.description ? node_info->fld.description : "",
             HEADERGEN_DOXYGEN_INLINE_COMMENT_END);
 
     /* Field mask */
@@ -58,7 +58,7 @@ int headergen_write_field_macros(FILE *fh, struct headergen_node_info *node_info
             HEADERGEN_SEPARATOR,
             HEADERGEN_MASK_SUFFIX,
 
-            (1 << fld->width) - 1,
+            (1 << node_info->fld.width) - 1,
 
             prefix,
             HEADERGEN_SEPARATOR,
@@ -89,25 +89,25 @@ int headergen_write_option_macros(FILE *fh, struct headergen_node_info *node_inf
     printf("Writing option macros\n");
 
     snprintf(prefix_fld, sizeof(prefix_fld), "%s%s%s%s%s",
-                dev->name,
+                node_info->dev.name,
                 HEADERGEN_SEPARATOR,
-                reg->name,
+                node_info->reg.name,
                 HEADERGEN_SEPARATOR,
-                fld->name);
+                node_info->fld.name);
 
     snprintf(prefix_opt, sizeof(prefix_opt), "%s%s%s",
                 prefix_fld,
                 HEADERGEN_SEPARATOR,
-                opt->name);
+                node_info->opt.name);
 
     snprintf(comment, sizeof(comment), "%s%s%s",
-                opt->name,
-                *opt->description ? " - " : "",
-                *opt->description ? opt->description : "");
+                node_info->opt.name,
+                *node_info->opt.description ? " - " : "",
+                *node_info->opt.description ? node_info->opt.description : "");
 
-    strntoupper(prefix_fld, prefix_fld, sizeof(prefix_fld));
-    strntoupper(prefix_opt, prefix_opt, sizeof(prefix_opt));
-    strntoupper(comment, comment, sizeof(comment));
+    strntouppersnakecase(prefix_fld, prefix_fld, sizeof(prefix_fld));
+    strntouppersnakecase(prefix_opt, prefix_opt, sizeof(prefix_opt));
+    strntouppersnakecase(comment, comment, sizeof(comment));
 
     /* Option value */
     fprintf(fh, "#define %s%s%s 0x%X ",
@@ -115,18 +115,18 @@ int headergen_write_option_macros(FILE *fh, struct headergen_node_info *node_inf
             HEADERGEN_SEPARATOR,
             HEADERGEN_VALUE_SUFFIX,
             
-            opt->value); 
+            node_info->opt.value); 
 
     /* Option description */
     fprintf(fh, "%s %s%s%s %s\n",
             HEADERGEN_DOXYGEN_INLINE_COMMENT_START,
-            opt->name,
-            *opt->description ? " - " : "",
-            *opt->description ? opt->description : "",
+            node_info->opt.name,
+            *node_info->opt.description ? " - " : "",
+            *node_info->opt.description ? node_info->opt.description : "",
             HEADERGEN_DOXYGEN_INLINE_COMMENT_END);
 
     /* Option value mask */
-    fprintf(fh, "#define %s (%s%s%s << %s%s%s))\n",
+    fprintf(fh, "#define %s (%s%s%s << %s%s%s)\n",
             prefix_opt,
 
             prefix_opt,
